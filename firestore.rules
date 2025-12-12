@@ -1,0 +1,52 @@
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+    
+    function isDoctor() {
+      // In production, use Custom Claims or look up user role in 'users' collection
+      // For this demo, we assume the user document has role info (insecure for real prod without Claims)
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'doctor'; 
+    }
+
+    // Users
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(userId); // Users can edit their own profile
+    }
+
+    // Clinics
+    match /clinics/{clinicId} {
+      allow read: if isAuthenticated();
+      allow write: if isDoctor(); // Only doctors can update clinic info
+    }
+
+    // Queues
+    match /queues/{queueId} {
+      allow read: if isAuthenticated();
+      allow write: if isDoctor(); // Doctors manage the queue counters
+    }
+
+    // specific tokens
+    match /tokens/{tokenId} {
+       allow read: if isAuthenticated() && (resource.data.patientId == request.auth.uid || isDoctor());
+       allow create: if isAuthenticated(); // Patients can join queue
+       allow update: if isDoctor(); // Doctors update status
+    }
+    
+    // Audit Logs
+    match /audit_logs/{logId} {
+      allow read: if false; // Admin only via backend
+      allow write: if false; // Only Cloud Functions write here
+    }
+  }
+}

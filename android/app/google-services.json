@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "707832193088",
+    "project_id": "smart-health-queue",
+    "storage_bucket": "smart-health-queue.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:707832193088:android:00f4f84add5195a3027fa5",
+        "android_client_info": {
+          "package_name": "com.example.queueapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBleAsfOdYo6NA1Mx2PibF4bAWijUSJTBY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
